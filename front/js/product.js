@@ -19,13 +19,13 @@ fetch("http://localhost:3000/api/products/"+ newID)
         title.textContent = product.name;
         description.textContent = product.description;
         price.textContent = product.price;
-        
+       
         for (let i=0; i < product.colors.length; i++) {
             let color = document.createElement("option");
-            color.setAttribute('value', product.colors);
-            color.textContent = product.colors;
+            color.setAttribute('value', product.colors[i]);
+            color.textContent = product.colors[i];
             colorsArray.appendChild(color)
-            
+           
         }
     });
   let imageURL = "";
