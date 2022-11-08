@@ -1,15 +1,14 @@
-let idProduct = new URL(window.location.href).searchParams.get("id"); 
-console.log(idProduct);
+
   
-function getProduct() {
-    return fetch(`http://localhost:3000/api/products/${idProduct}`)
+function getProduct(idProduct2) {
+    return fetch(`http://localhost:3000/api/products/${idProduct2}`)
       .then((res) => res.json())
       .then((data) => data)
       .catch(function (error) {
         console.log(error);
     });
 }
-  function displayProduct(product){
+function displayProduct(product){
 let picture = document.querySelector(".item__img"); 
 let title = document.getElementById("title"); 
 let price = document.getElementById("price"); 
@@ -34,7 +33,7 @@ colorsArray.appendChild(color);
   addToCart.addEventListener('click', (event) => {
   event.preventDefault();
   const selection = {
-      id: idProduct,
+      id: product.id,
       image: product.imageUrl,
       alt: product.altTxt,
       name: title.textContent,
@@ -53,27 +52,31 @@ colorsArray.appendChild(color);
     let update = false;
     if (productInLocalStorage) {
      productInLocalStorage.forEach (function (productOk, key) {
-      if (productOk.id == idProduct && productOk.color == selectColors.value) {
+      if (productOk.id == product.id && productOk.color == selectColors.value) {
         productInLocalStorage[key].quantity = parseInt(productOk.quantity) + parseInt(selectQuantity.value);
         localStorage.setItem('product', JSON.stringify(productInLocalStorage));
         update = true;
-        addConfirm();
+     
       }
     });
       if (!update) {
       addProductLocalStorage();
-      addConfirm();
+     
       }
     }
     else {
       productInLocalStorage = [];
       addProductLocalStorage();
-      addConfirm();
+     
     }
+    addConfirm()
   });
 }
 async function main() {
-    const product = await getProduct() 
+  let idProduct = new URL(window.location.href).searchParams.get("id"); 
+    console.log(idProduct);
+    const product = await getProduct(idProduct) 
     displayProduct(product)
+    
 }
 main()

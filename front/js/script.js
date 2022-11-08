@@ -8,7 +8,7 @@ function getProducts() {
     });
 }
 
-function displayProduct(products) {
+function displayProducts(products) {
   for (let i in products) {
     const product = products[i];
     let items = document.getElementById("items");
@@ -35,6 +35,6 @@ function displayProduct(products) {
 }
 async function main() {
   const products = await getProducts();
-  displayProduct(products);
+  displayProducts(products);
 }
 main();
