@@ -1,4 +1,15 @@
+function getProducts() {
+  return fetch("http://localhost:3000/api/products")
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+// RECUPERER LES PRODUITS STOCKES DANS LE LOCALSTORAGE   //
 let products = [];
+function displayProducts(products) {
+
 let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
 // AFFICHER LES PRODUITS DU PANIER
@@ -8,7 +19,7 @@ let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
  // si le panier est vide : afficher 'le panier est vide'
 if(productInLocalStorage === null || productInLocalStorage == 0) {
-  document.querySelector("#cart__items").textContent =`
+  document.querySelector("#cart__items").innerHTML =`
   <div class="cart__empty">
     <p>Votre panier est vide ! <br> Merci de sélectionner des produits depuis la page d'accueil</p>
   </div>`;
@@ -20,7 +31,7 @@ else{
   // expression initiale; condition; incrémentation
   for (i = 0; i < productInLocalStorage.length; i++) {
   products.push(productInLocalStorage[i].id);
- 
+
   // le code suivant sera injecté à chaque tour de boucle
   // selon la longueur des produits dans le local storage
   itemCards = itemCards + `
@@ -33,7 +44,7 @@ else{
       <div class="cart__item__content__titlePrice">
         <h2>${productInLocalStorage[i].name}</h2>
         <p>${productInLocalStorage[i].color}</p>
-        <p>${productInLocalStorage[i].price} €</p>
+        <p>${products.price}€</p>
       </div>
       <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
@@ -47,6 +58,7 @@ else{
     </div>
   </article>
     `;
+ 
   }
   if (i === productInLocalStorage.length) {
   const itemCart = document.getElementById('cart__items');
@@ -177,7 +189,7 @@ function postForm() {
   //contrôle prénom, test : Martin-Luther Jr. ou 陳大文 ou ñÑâê ou ации ou John D'Largy
   function controlFirstName() {
     const validFirstName = contact.firstName;
-    if (/[a-zA-Z]+/g.test(validFirstName)) {
+    if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validFirstName)) {
       return true;
     } else {
       let firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
@@ -188,7 +200,7 @@ function postForm() {
   // contrôle nom
   function controlName() {
     const validName = contact.lastName;
-    if (/[a-zA-Z]+/g.test(validName)) {
+    if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validName)) {
       return true;
     } else {
       let lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
@@ -210,7 +222,7 @@ function postForm() {
   // contrôle ville
   function controlCity() {
     const validAddress = contact.city;
-    if (/[a-zA-Z]+/g.test(validAddress)) {
+    if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,10}$/.test(validAddress)) {
       return true;
     } else {
       let cityErrorMsg = document.getElementById('cityErrorMsg');
@@ -260,11 +272,11 @@ function postForm() {
       'Content-Type': 'application/json',
     }
   };
-
+  
   fetch("http://localhost:3000/api/products/order", options)
     .then(response => response.json())
     .then(data => {
-      localStorage.setItem('orderId', data.orderId);
+      localStorage.setItem('orderId',data.orderId);
         if (validControl()) {
           document.location.href = 'confirmation.html?id='+ data.orderId;
         }
@@ -272,4 +284,13 @@ function postForm() {
 
 }) // fin eventListener postForm
 } // fin envoi du formulaire postForm
-postForm();
+
+}
+async function main() {
+  const products = await getProducts();
+  displayProducts(products);
+}
+main();
+
+
+// fin cart.js
