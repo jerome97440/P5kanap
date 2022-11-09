@@ -1,7 +1,7 @@
 
   
-function getProduct(idProduct2) {
-    return fetch(`http://localhost:3000/api/products/${idProduct2}`)
+function getProduct(idProduct) {
+    return fetch(`http://localhost:3000/api/products/${idProduct}`)
       .then((res) => res.json())
       .then((data) => data)
       .catch(function (error) {
