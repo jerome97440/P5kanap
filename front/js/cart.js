@@ -8,7 +8,7 @@ function getProducts() {
     });
 }
 function displayProducts(product) {
-  let productInLocalStorage = JSON.parse(localStorage.getItem("prod")); 
+  let productInLocalStorage = JSON.parse(localStorage.getItem("product")); 
     console.log(productInLocalStorage);
  
     for (let i = 0; i < productInLocalStorage.length; i++) {
@@ -58,7 +58,7 @@ function displayProducts(product) {
       // ajout d'un p qui va contenir le prix du produit
       let divCartItemsDescriptionPrice = document.createElement("p");
       divCartItemsDescription.appendChild(divCartItemsDescriptionPrice);
-      divCartItemsDescriptionPrice.innerHTML = products[i].price + " €"; // ici le prix a été récupéré de l'api directement
+      divCartItemsDescriptionPrice.innerHTML = product[i].price + " €"; // ici le prix a été récupéré de l'api directement
 
       // ajout d'une div    
       let divCartItemsSetting = document.createElement("div");
@@ -95,131 +95,9 @@ function displayProducts(product) {
       pDeleteItem.className = "deleteItem";
       divCartItemsDelete.appendChild(pDeleteItem);
       pDeleteItem.innerHTML = "Supprimer";
-      const quantityAndPrice = () => {
+    }
+}
 
-        let elQuantity = document.getElementsByClassName('itemQuantity'); // on cible la class "itemQuantity"
-        let productQuantity = elQuantity.length; // on stock la quantité des produits dans une variable
-        totalQuantity = 0; // on fixe la quantité à 0 de base
-
-        for (let j = 0; j < productQuantity; ++j) {
-            totalQuantity += elQuantity[j].valueAsNumber; // on va chercher la quantité dans le tableau avec une boucle for   
-        }
-
-
-        let valueQuantity = document.getElementById('totalQuantity'); // on cible l'id totalQuantity
-        valueQuantity.innerHTML = totalQuantity; // on ajoute la quantité dans le html 
-
-        // affichage du prix total
-        totalPrice = 0; // on fixe la prix total à 0 de base
-        for (let k = 0; k < productQuantity; ++k) {
-            totalPrice += (elQuantity[k].valueAsNumber * products[k].price); // on multiplie la quantité par le prix  (prix récupéré de l'api)
-        }
-        let productTotalPrice = document.getElementById('totalPrice');
-        productTotalPrice.innerHTML = totalPrice;
-    };
-    quantityAndPrice();
-    // fonction pour modifier la quantité 
-    const quantityChanged = () => {
-      let qtyModif = document.querySelectorAll(".itemQuantity");
-
-
-      for (let l = 0; l < qtyModif.length; l++) {
-          qtyModif[l].addEventListener("change", (e) => {
-              e.preventDefault();
-
-
-              let qtyInputValue = qtyModif[l].valueAsNumber; // on stock la quantité reçu par la boucle dans une variable
-
-              addProduct[l].addQuantity = qtyInputValue; // on récupere la quantité du localstorage 
-
-              quantityAndPrice(); // on rappelle la fonction pour que le prix s'actualise en temps réel. 
-              console.log(quantityAndPrice());
-
-              localStorage.setItem("prod", JSON.stringify(productInLocalStorage)); // on modifie ou supprime la quantité dans le localStorage
-
-          });
-      }
-  };
-  quantityChanged();
-
-  // fonction pour supprimer un produit
-  const deleteProducts = () => {
-
-      pDeleteItem.addEventListener("click", (e) => {
-          e.preventDefault();
-          // enregistrer l'id et la couleur séléctionnés par le bouton supprimer
-          let deleteId =productInLocalStoraget[i].Id;
-          let deleteColor = productInLocalStorage[i].Colors;
-
-          // filtrer l'élément cliqué par le bouton supprimer
-          productInLocalStoraget = productInLocalStorage.filter(el => el.addIdProduct !== deleteId || el.addColors !== deleteColor);
-          console.log(pDeleteItem);
-
-
-          localStorage.setItem("prod", JSON.stringify(addProduct)); // on modifie ou supprime la quantité dans le localStorage
-
-          location.reload();
-
-      });
-  }
-
-  deleteProducts();
-
-  let btnCommander = document.getElementById("order");
-
-  btnCommander.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      const contact = {
-          firstName: document.getElementById("firstName").value,
-          lastName: document.getElementById("lastName").value,
-          address: document.getElementById("address").value,
-          city: document.getElementById("city").value,
-          email: document.getElementById("email").value
-      }
-
-      let contactRegex = [
-          firstName.reportValidity(),
-          lastName.reportValidity(),
-          address.reportValidity(),
-          city.reportValidity(),
-          email.reportValidity()
-      ]
-
-      let products = [];
-      products.push(productInLocalStorage[i].productInLocalStorage);
-      console.log(products);
-
-      const send = {
-          products,
-          contact
-      };
-
-      const promise = {
-          method: 'POST',
-          body: JSON.stringify(send),
-          headers: {
-              'Content-Type': 'application/json',
-          }
-      }
-      console.log(contact);
-      let contactRegexEnd = true;
-      for (let n = 0; n < contactRegex.length; n++) {
-          if (contactRegex[n] == false) contactRegexEnd = false;
-      }
-      if (contactRegexEnd == true) {
-
-          fetch("http://localhost:3000/api/products/order", promise)
-              .then(response => response.json())
-              .then(data => {
-                  localStorage.setItem('orderId', data.orderId);
-                  document.location.href = 'confirmation.html?id=' + data.orderId;
-                  console.log(data.orderId);
-              });
-      }
-  });
-};
-};
 async function main() {
   const products = await getProducts();
   displayProducts(products);
